@@ -19,7 +19,7 @@ const pageTitles: Record<string, string> = {
 }
 
 function PageFallback() {
-  return <div className="flex min-h-[280px] items-center justify-center gap-2 text-[11px] text-[#87928b]" role="status"><span className="size-[15px] animate-spin rounded-full border-2 border-[#dcebe4] border-t-[#138563]" />Загружаем страницу…</div>
+  return <div className="flex min-h-[280px] items-center justify-center gap-2 text-[12px] text-[#66788a]" role="status"><span className="size-4 animate-spin rounded-full border-2 border-[#d9e2ec] border-t-[#0a6ed1]" />Загружаем страницу…</div>
 }
 
 function App() {
@@ -43,16 +43,16 @@ function App() {
   })()
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex min-h-screen bg-[#f5f6f7]">
       <AppSidebar activePage={activePage} isOpen={mobileMenuOpen} onNavigate={selectPage} />
-      {mobileMenuOpen && <button className="fixed inset-0 z-30 border-0 bg-[#14231d]/35 min-[621px]:hidden" aria-label="Закрыть меню" onClick={() => setMobileMenuOpen(false)} />}
+      {mobileMenuOpen && <button className="fixed inset-0 z-30 border-0 bg-[#1d2d3e]/35 min-[760px]:hidden" aria-label="Закрыть меню" onClick={() => setMobileMenuOpen(false)} />}
 
-      <div className="ml-0 flex min-h-screen min-w-0 flex-1 flex-col min-[621px]:ml-[205px] min-[821px]:ml-[220px] min-[1101px]:ml-[252px]">
+      <div className="ml-0 flex min-h-screen min-w-0 flex-1 flex-col min-[760px]:ml-[272px]">
         <AppHeader pageTitle={pageTitles[activePage]} onOpenMenu={() => setMobileMenuOpen(true)} />
-        <main className="mx-auto w-full max-w-[1540px] flex-1 px-[15px] py-[23px] min-[621px]:px-[18px] min-[621px]:py-[27px] min-[821px]:px-[25px] min-[821px]:py-[35px] min-[1101px]:px-[37px]">
+        <main className="mx-auto w-full max-w-[1540px] flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
           <Suspense fallback={<PageFallback />}>{page}</Suspense>
         </main>
-        <footer className="flex justify-between px-[15px] pb-3 text-[9px] text-[#a1aaa5] min-[621px]:px-[18px] min-[821px]:px-[25px] min-[1101px]:px-[37px]"><span>© 2025 RetailX</span><span className="inline-flex items-center gap-1.5">Управление магазином <i className="size-[5px] rounded-full bg-[#21aa7a]" /> Всё в порядке</span></footer>
+        <footer className="flex justify-between px-4 pb-3 text-[10px] text-[#66788a] sm:px-6 lg:px-8"><span>© 2026 RetailX</span><span className="inline-flex items-center gap-1.5">Управление магазином <i className="size-1.5 rounded-full bg-[#30914c]" /> Всё в порядке</span></footer>
       </div>
     </div>
   )
