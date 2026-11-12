@@ -1,38 +1,60 @@
+import { lazy, Suspense, useState } from 'react'
+import AppHeader from './components/AppHeader.js'
+import AppSidebar from './components/AppSidebar.js'
+
+const OverviewPage = lazy(() => import('./pages/OverviewPage.js'))
+const ProductsPage = lazy(() => import('./pages/ProductsPage.js'))
+const InventoryPage = lazy(() => import('./pages/InventoryPage.js'))
+const CategoriesPage = lazy(() => import('./pages/CategoriesPage.js'))
+const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage.js'))
+const SettingsPage = lazy(() => import('./pages/SettingsPage.js'))
+
+const pageTitles: Record<string, string> = {
+  overview: 'Обзор',
+  products: 'Товары',
+  inventory: 'Остатки',
+  categories: 'Категории',
+  analytics: 'Аналитика',
+  settings: 'Настройки',
+}
+
+function PageFallback() {
+  return <div className="flex min-h-[280px] items-center justify-center gap-2 text-[11px] text-[#87928b]" role="status"><span className="size-[15px] animate-spin rounded-full border-2 border-[#dcebe4] border-t-[#138563]" />Загружаем страницу…</div>
+}
+
 function App() {
+  const [activePage, setActivePage] = useState('overview')
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  const selectPage = (page: string) => {
+    setActivePage(page)
+    setMobileMenuOpen(false)
+  }
+
+  const page = (() => {
+    switch (activePage) {
+      case 'products': return <ProductsPage />
+      case 'inventory': return <InventoryPage />
+      case 'categories': return <CategoriesPage />
+      case 'analytics': return <AnalyticsPage />
+      case 'settings': return <SettingsPage />
+      default: return <OverviewPage onNavigate={selectPage} />
+    }
+  })()
+
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 text-slate-100">
-      <section className="w-full max-w-xl rounded-2xl border border-slate-800 bg-slate-900 p-8 shadow-2xl shadow-black/20 sm:p-10">
-        <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-sky-400/20 bg-sky-400/10 px-3 py-1 text-sm font-medium text-sky-300">
-          <span className="size-2 rounded-full bg-sky-400" />
-          Bun + React + Tailwind
-        </div>
-        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-          Всё готово к старту.
-        </h1>
-        <p className="mt-4 leading-7 text-slate-400">
-          Редактируй <code className="rounded bg-slate-800 px-1.5 py-0.5 font-mono text-sm text-sky-300">src/App.tsx</code> —
-          изменения появятся мгновенно благодаря Vite HMR.
-        </p>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <a
-            className="rounded-lg bg-sky-400 px-4 py-2.5 font-medium text-slate-950 transition hover:bg-sky-300"
-            href="https://tailwindcss.com/docs"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Tailwind docs
-          </a>
-          <a
-            className="rounded-lg border border-slate-700 px-4 py-2.5 font-medium text-slate-200 transition hover:border-slate-500 hover:bg-slate-800"
-            href="https://react.dev/learn"
-            target="_blank"
-            rel="noreferrer"
-          >
-            React docs
-          </a>
-        </div>
-      </section>
-    </main>
+    <div className="flex min-h-screen bg-white">
+      <AppSidebar activePage={activePage} isOpen={mobileMenuOpen} onNavigate={selectPage} />
+      {mobileMenuOpen && <button className="fixed inset-0 z-30 border-0 bg-[#14231d]/35 min-[621px]:hidden" aria-label="Закрыть меню" onClick={() => setMobileMenuOpen(false)} />}
+
+      <div className="ml-0 flex min-h-screen min-w-0 flex-1 flex-col min-[621px]:ml-[205px] min-[821px]:ml-[220px] min-[1101px]:ml-[252px]">
+        <AppHeader pageTitle={pageTitles[activePage]} onOpenMenu={() => setMobileMenuOpen(true)} />
+        <main className="mx-auto w-full max-w-[1540px] flex-1 px-[15px] py-[23px] min-[621px]:px-[18px] min-[621px]:py-[27px] min-[821px]:px-[25px] min-[821px]:py-[35px] min-[1101px]:px-[37px]">
+          <Suspense fallback={<PageFallback />}>{page}</Suspense>
+        </main>
+        <footer className="flex justify-between px-[15px] pb-3 text-[9px] text-[#a1aaa5] min-[621px]:px-[18px] min-[821px]:px-[25px] min-[1101px]:px-[37px]"><span>© 2025 RetailX</span><span className="inline-flex items-center gap-1.5">Управление магазином <i className="size-[5px] rounded-full bg-[#21aa7a]" /> Всё в порядке</span></footer>
+      </div>
+    </div>
   )
 }
 
